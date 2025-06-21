@@ -4,8 +4,7 @@
 	"build": {
 		"beforeDevCommand": "pnpm dev:internal-tauri",
 		"beforeBuildCommand": "[ \"$CI\" = \"true\" ] || pnpm build:desktop -- --mode development",
-		"frontendDist": "../../apps/desktop/build",
-		"devUrl": "http://localhost:1420"
+		"frontendDist": "../../apps/desktop/build"
 	},
 	"bundle": {
 		"active": false,
