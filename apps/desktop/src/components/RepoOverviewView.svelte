@@ -43,7 +43,7 @@
 	let loadingRemotes = $state<boolean>(true);
 	let loadingReadme = $state<boolean>(true);
 	let savingReadme = $state<boolean>(false);
-	
+
 	// Changelog state
 	let changelogContent = $state<string>('');
 	let changelogExists = $state<boolean>(false);
@@ -52,7 +52,7 @@
 	let loadingChangelog = $state<boolean>(true);
 	let savingChangelog = $state<boolean>(false);
 	let generatingChangelogEntry = $state<boolean>(false);
-	
+
 	let repoStats = $state({
 		totalCommits: 0,
 		totalBranches: 0,
@@ -104,15 +104,18 @@
 
 			// Mock repository statistics - in a real app, you'd fetch these from the backend
 			await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate API call
-			
+
 			// Generate mock data for line graphs
-			const generateMockHistoryData = (baseValue: number, days: number = 30): { date: string; value: number }[] => {
+			const generateMockHistoryData = (
+				baseValue: number,
+				days: number = 30
+			): { date: string; value: number }[] => {
 				const data: { date: string; value: number }[] = [];
 				for (let i = days; i >= 0; i--) {
 					const date = new Date();
 					date.setDate(date.getDate() - i);
 					const variation = Math.random() * 0.3 - 0.15; // ±15% variation
-					const value = Math.max(1, Math.floor(baseValue * (1 + variation * (days - i) / days)));
+					const value = Math.max(1, Math.floor(baseValue * (1 + (variation * (days - i)) / days)));
 					data.push({
 						date: date.toISOString().split('T')[0] as string,
 						value
@@ -132,14 +135,22 @@
 				lastCommitDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
 				mainBranch: 'main',
 				repoSize: `${(Math.random() * 50 + 5).toFixed(1)} MB`,
-				commitHistory: generateMockHistoryData(totalCommits).map(d => ({ date: d.date, commits: d.value })),
-				branchHistory: generateMockHistoryData(totalBranches).map(d => ({ date: d.date, branches: d.value })),
-				contributorHistory: generateMockHistoryData(totalContributors).map(d => ({ date: d.date, contributors: d.value }))
+				commitHistory: generateMockHistoryData(totalCommits).map((d) => ({
+					date: d.date,
+					commits: d.value
+				})),
+				branchHistory: generateMockHistoryData(totalBranches).map((d) => ({
+					date: d.date,
+					branches: d.value
+				})),
+				contributorHistory: generateMockHistoryData(totalContributors).map((d) => ({
+					date: d.date,
+					contributors: d.value
+				}))
 			};
 
 			// Generate mock project files structure
 			projectFiles = generateMockProjectFiles();
-
 		} catch (error) {
 			console.error('Failed to load repository info:', error);
 			remotes = [];
@@ -165,9 +176,27 @@
 						isDirectory: true,
 						isExpanded: false,
 						children: [
-							{ name: 'Button.svelte', path: 'src/components/Button.svelte', isDirectory: false, size: 2480, lastModified: new Date('2024-01-15') },
-							{ name: 'Modal.svelte', path: 'src/components/Modal.svelte', isDirectory: false, size: 3850, lastModified: new Date('2024-01-12') },
-							{ name: 'Input.svelte', path: 'src/components/Input.svelte', isDirectory: false, size: 1920, lastModified: new Date('2024-01-10') }
+							{
+								name: 'Button.svelte',
+								path: 'src/components/Button.svelte',
+								isDirectory: false,
+								size: 2480,
+								lastModified: new Date('2024-01-15')
+							},
+							{
+								name: 'Modal.svelte',
+								path: 'src/components/Modal.svelte',
+								isDirectory: false,
+								size: 3850,
+								lastModified: new Date('2024-01-12')
+							},
+							{
+								name: 'Input.svelte',
+								path: 'src/components/Input.svelte',
+								isDirectory: false,
+								size: 1920,
+								lastModified: new Date('2024-01-10')
+							}
 						]
 					},
 					{
@@ -176,13 +205,43 @@
 						isDirectory: true,
 						isExpanded: false,
 						children: [
-							{ name: 'api.ts', path: 'src/lib/api.ts', isDirectory: false, size: 4560, lastModified: new Date('2024-01-14') },
-							{ name: 'utils.ts', path: 'src/lib/utils.ts', isDirectory: false, size: 2340, lastModified: new Date('2024-01-13') },
-							{ name: 'types.ts', path: 'src/lib/types.ts', isDirectory: false, size: 1680, lastModified: new Date('2024-01-11') }
+							{
+								name: 'api.ts',
+								path: 'src/lib/api.ts',
+								isDirectory: false,
+								size: 4560,
+								lastModified: new Date('2024-01-14')
+							},
+							{
+								name: 'utils.ts',
+								path: 'src/lib/utils.ts',
+								isDirectory: false,
+								size: 2340,
+								lastModified: new Date('2024-01-13')
+							},
+							{
+								name: 'types.ts',
+								path: 'src/lib/types.ts',
+								isDirectory: false,
+								size: 1680,
+								lastModified: new Date('2024-01-11')
+							}
 						]
 					},
-					{ name: 'app.ts', path: 'src/app.ts', isDirectory: false, size: 890, lastModified: new Date('2024-01-16') },
-					{ name: 'main.ts', path: 'src/main.ts', isDirectory: false, size: 456, lastModified: new Date('2024-01-16') }
+					{
+						name: 'app.ts',
+						path: 'src/app.ts',
+						isDirectory: false,
+						size: 890,
+						lastModified: new Date('2024-01-16')
+					},
+					{
+						name: 'main.ts',
+						path: 'src/main.ts',
+						isDirectory: false,
+						size: 456,
+						lastModified: new Date('2024-01-16')
+					}
 				]
 			},
 			{
@@ -191,8 +250,20 @@
 				isDirectory: true,
 				isExpanded: false,
 				children: [
-					{ name: 'index.html', path: 'public/index.html', isDirectory: false, size: 1240, lastModified: new Date('2024-01-05') },
-					{ name: 'favicon.ico', path: 'public/favicon.ico', isDirectory: false, size: 2048, lastModified: new Date('2024-01-01') }
+					{
+						name: 'index.html',
+						path: 'public/index.html',
+						isDirectory: false,
+						size: 1240,
+						lastModified: new Date('2024-01-05')
+					},
+					{
+						name: 'favicon.ico',
+						path: 'public/favicon.ico',
+						isDirectory: false,
+						size: 2048,
+						lastModified: new Date('2024-01-01')
+					}
 				]
 			},
 			{
@@ -201,14 +272,50 @@
 				isDirectory: true,
 				isExpanded: false,
 				children: [
-					{ name: 'README.md', path: 'docs/README.md', isDirectory: false, size: 3456, lastModified: new Date('2024-01-14') },
-					{ name: 'CONTRIBUTING.md', path: 'docs/CONTRIBUTING.md', isDirectory: false, size: 2890, lastModified: new Date('2024-01-08') }
+					{
+						name: 'README.md',
+						path: 'docs/README.md',
+						isDirectory: false,
+						size: 3456,
+						lastModified: new Date('2024-01-14')
+					},
+					{
+						name: 'CONTRIBUTING.md',
+						path: 'docs/CONTRIBUTING.md',
+						isDirectory: false,
+						size: 2890,
+						lastModified: new Date('2024-01-08')
+					}
 				]
 			},
-			{ name: 'package.json', path: 'package.json', isDirectory: false, size: 1567, lastModified: new Date('2024-01-15') },
-			{ name: 'tsconfig.json', path: 'tsconfig.json', isDirectory: false, size: 890, lastModified: new Date('2024-01-10') },
-			{ name: 'vite.config.ts', path: 'vite.config.ts', isDirectory: false, size: 1230, lastModified: new Date('2024-01-12') },
-			{ name: '.gitignore', path: '.gitignore', isDirectory: false, size: 456, lastModified: new Date('2024-01-01') }
+			{
+				name: 'package.json',
+				path: 'package.json',
+				isDirectory: false,
+				size: 1567,
+				lastModified: new Date('2024-01-15')
+			},
+			{
+				name: 'tsconfig.json',
+				path: 'tsconfig.json',
+				isDirectory: false,
+				size: 890,
+				lastModified: new Date('2024-01-10')
+			},
+			{
+				name: 'vite.config.ts',
+				path: 'vite.config.ts',
+				isDirectory: false,
+				size: 1230,
+				lastModified: new Date('2024-01-12')
+			},
+			{
+				name: '.gitignore',
+				path: '.gitignore',
+				isDirectory: false,
+				size: 456,
+				lastModified: new Date('2024-01-01')
+			}
 		];
 	}
 
@@ -232,22 +339,26 @@
 		try {
 			// Mock file content based on file type
 			await new Promise((resolve) => setTimeout(resolve, 300)); // Simulate loading
-			
+
 			const fileExtension = filePath.split('.').pop()?.toLowerCase();
-			
+
 			switch (fileExtension) {
 				case 'json':
-					filePreviewContent = JSON.stringify({
-						name: project.title,
-						version: "1.0.0",
-						description: "A GitButler project",
-						main: "src/main.ts",
-						scripts: {
-							dev: "vite",
-							build: "vite build",
-							preview: "vite preview"
-						}
-					}, null, 2);
+					filePreviewContent = JSON.stringify(
+						{
+							name: project.title,
+							version: '1.0.0',
+							description: 'A GitButler project',
+							main: 'src/main.ts',
+							scripts: {
+								dev: 'vite',
+								build: 'vite build',
+								preview: 'vite preview'
+							}
+						},
+						null,
+						2
+					);
 					break;
 				case 'md':
 					filePreviewContent = `# ${project.title}
@@ -353,7 +464,13 @@ Last modified: ${new Date().toLocaleDateString()}`;
 	async function loadChangelog() {
 		try {
 			loadingChangelog = true;
-			const changelogFiles = ['CHANGELOG.md', 'changelog.md', 'CHANGELOG.txt', 'changelog.txt', 'CHANGELOG'];
+			const changelogFiles = [
+				'CHANGELOG.md',
+				'changelog.md',
+				'CHANGELOG.txt',
+				'changelog.txt',
+				'CHANGELOG'
+			];
 
 			let changelogFound = false;
 			for (const filename of changelogFiles) {
@@ -463,22 +580,24 @@ Last modified: ${new Date().toLocaleDateString()}`;
 	async function generateChangelogEntry() {
 		try {
 			generatingChangelogEntry = true;
-			
+
 			// Use AI to generate a changelog entry
 			const today = new Date().toISOString().split('T')[0];
-			
+
 			// Check if we already have content to determine if this is a new entry or first entry
 			const hasExistingContent = editedChangelogContent && editedChangelogContent.trim();
-			const hasChangelogHeaders = hasExistingContent && editedChangelogContent.includes('# Changelog');
-			
+			const hasChangelogHeaders =
+				hasExistingContent && editedChangelogContent.includes('# Changelog');
+
 			const prompt = [
 				{
 					role: MessageRole.System,
-					content: 'You are an expert technical writer helping to generate changelog entries for software projects. Create professional changelog entries in standard Keep a Changelog format.'
+					content:
+						'You are an expert technical writer helping to generate changelog entries for software projects. Create professional changelog entries in standard Keep a Changelog format.'
 				},
 				{
 					role: MessageRole.User,
-					content: hasChangelogHeaders 
+					content: hasChangelogHeaders
 						? `Generate ONLY a new version entry for today (${today}) to add to an existing changelog. The entry should:
 
 1. Start with "## [Unreleased] - ${today}" (or increment version if appropriate)
@@ -519,12 +638,12 @@ Please generate the complete changelog structure.`
 			// Add the generated entry to the current content
 			const currentContent = editedChangelogContent || '';
 			let newContent;
-			
+
 			if (hasChangelogHeaders) {
 				// Add new entry after existing headers, before previous entries
 				const lines = currentContent.split('\n');
-				const firstVersionIndex = lines.findIndex(line => line.startsWith('## '));
-				
+				const firstVersionIndex = lines.findIndex((line) => line.startsWith('## '));
+
 				if (firstVersionIndex > -1) {
 					// Insert before first version entry
 					const beforeVersion = lines.slice(0, firstVersionIndex).join('\n');
@@ -536,19 +655,20 @@ Please generate the complete changelog structure.`
 				}
 			} else {
 				// First entry or no headers, replace or add content
-				newContent = currentContent ? `${generatedEntry.trim()}\n\n${currentContent}` : generatedEntry.trim();
+				newContent = currentContent
+					? `${generatedEntry.trim()}\n\n${currentContent}`
+					: generatedEntry.trim();
 			}
-			
+
 			editedChangelogContent = newContent;
-			
 		} catch (error) {
 			console.error('Failed to generate changelog entry:', error);
-			
+
 			// Fallback to template if AI fails
 			const today = new Date().toISOString().split('T')[0];
 			const currentContent = editedChangelogContent || '';
 			const hasChangelogHeaders = currentContent.includes('# Changelog');
-			
+
 			let fallbackEntry;
 			if (hasChangelogHeaders) {
 				// Just generate a new version entry
@@ -593,8 +713,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 			let newContent;
 			if (hasChangelogHeaders) {
 				const lines = currentContent.split('\n');
-				const firstVersionIndex = lines.findIndex(line => line.startsWith('## '));
-				
+				const firstVersionIndex = lines.findIndex((line) => line.startsWith('## '));
+
 				if (firstVersionIndex > -1) {
 					const beforeVersion = lines.slice(0, firstVersionIndex).join('\n');
 					const afterVersion = lines.slice(firstVersionIndex).join('\n');
@@ -605,7 +725,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 			} else {
 				newContent = currentContent ? `${fallbackEntry}\n\n${currentContent}` : fallbackEntry;
 			}
-			
+
 			editedChangelogContent = newContent;
 		} finally {
 			generatingChangelogEntry = false;
@@ -631,25 +751,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 	}
 
 	// Simple line graph component function
-	function createLineGraph(data: {date: string, value: number}[], color: string = '#007acc') {
+	function createLineGraph(data: { date: string; value: number }[], color: string = '#007acc') {
 		if (!data.length) return '';
-		
+
 		const width = 300;
 		const height = 120;
 		const padding = 20;
 		const innerWidth = width - 2 * padding;
 		const innerHeight = height - 2 * padding;
-		
-		const maxValue = Math.max(...data.map(d => d.value));
-		const minValue = Math.min(...data.map(d => d.value));
+
+		const maxValue = Math.max(...data.map((d) => d.value));
+		const minValue = Math.min(...data.map((d) => d.value));
 		const valueRange = maxValue - minValue || 1;
-		
-		const points = data.map((d, i) => {
-			const x = padding + (i / (data.length - 1)) * innerWidth;
-			const y = height - padding - ((d.value - minValue) / valueRange) * innerHeight;
-			return `${x},${y}`;
-		}).join(' ');
-		
+
+		const points = data
+			.map((d, i) => {
+				const x = padding + (i / (data.length - 1)) * innerWidth;
+				const y = height - padding - ((d.value - minValue) / valueRange) * innerHeight;
+				return `${x},${y}`;
+			})
+			.join(' ');
+
 		return `
 			<svg width="${width}" height="${height}" class="line-graph">
 				<defs>
@@ -668,11 +790,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 					fill="url(#gradient-${color.replace('#', '')})"
 					points="${points} ${width - padding},${height - padding} ${padding},${height - padding}"
 				/>
-				${data.map((d, i) => {
-					const x = padding + (i / (data.length - 1)) * innerWidth;
-					const y = height - padding - ((d.value - minValue) / valueRange) * innerHeight;
-					return `<circle cx="${x}" cy="${y}" r="3" fill="${color}" />`;
-				}).join('')}
+				${data
+					.map((d, i) => {
+						const x = padding + (i / (data.length - 1)) * innerWidth;
+						const y = height - padding - ((d.value - minValue) / valueRange) * innerHeight;
+						return `<circle cx="${x}" cy="${y}" r="3" fill="${color}" />`;
+					})
+					.join('')}
 			</svg>
 		`;
 	}
@@ -921,13 +1045,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 										<div class="file-preview-header">
 											<div class="file-preview-title">
 												<FileIcon fileName={selectedFilePath} />
-												<span class="text-13 text-semibold">{selectedFilePath.split('/').pop()}</span>
+												<span class="text-13 text-semibold"
+													>{selectedFilePath.split('/').pop()}</span
+												>
 											</div>
-											<Button 
-												kind="ghost" 
-												size="button" 
-												icon="cross-small" 
-												onclick={() => { selectedFilePath = null; filePreviewContent = ''; }}
+											<Button
+												kind="ghost"
+												size="button"
+												icon="cross-small"
+												onclick={() => {
+													selectedFilePath = null;
+													filePreviewContent = '';
+												}}
 											>
 												Close
 											</Button>
@@ -948,7 +1077,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 										<div class="placeholder-content">
 											<Icon name="doc" />
 											<h4 class="text-15 text-semibold">Select a file to preview</h4>
-											<p class="text-12 text-body">Click on any file in the explorer to view its contents</p>
+											<p class="text-12 text-body">
+												Click on any file in the explorer to view its contents
+											</p>
 										</div>
 									</div>
 								{/if}
@@ -1128,7 +1259,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 							></textarea>
 							<div class="editor-help">
 								<Icon name="info" />
-								<span class="text-11 text-body">Use AI to generate changelog entries or write manually. Supports Markdown formatting.</span>
+								<span class="text-11 text-body"
+									>Use AI to generate changelog entries or write manually. Supports Markdown
+									formatting.</span
+								>
 							</div>
 						</div>
 					{:else if changelogExists && changelogContent.trim()}
@@ -1140,9 +1274,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 							<Icon name="timeline" />
 							<h3 class="text-15 text-semibold">No CHANGELOG File</h3>
 							<p class="text-12 text-body">
-								Create a CHANGELOG to track project changes and version history for your users and contributors.
+								Create a CHANGELOG to track project changes and version history for your users and
+								contributors.
 							</p>
-							<Button style="pop" icon="plus" onclick={startEditingChangelog}>Create CHANGELOG</Button>
+							<Button style="pop" icon="plus" onclick={startEditingChangelog}
+								>Create CHANGELOG</Button
+							>
 						</div>
 					{/if}
 				{:else}
@@ -1156,8 +1293,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 						<Icon name="timeline" />
 						<h3 class="text-15 text-semibold">Welcome to {project.title}</h3>
 						<p class="text-12 text-body">
-							Use the sidebar to explore repository statistics, remotes, and
-							documentation.
+							Use the sidebar to explore repository statistics, remotes, and documentation.
 						</p>
 					</div>
 				{/if}
@@ -1169,7 +1305,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 {#snippet fileTreeNode(node: ProjectFileNode, depth: number)}
 	<div class="file-tree-item" style="padding-left: {depth * 16}px;">
 		{#if node.isDirectory}
-			<button 
+			<button
 				class="file-tree-folder"
 				class:expanded={node.isExpanded}
 				onclick={() => toggleFileFolder(node)}
@@ -1184,7 +1320,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 				{/each}
 			{/if}
 		{:else}
-			<button 
+			<button
 				class="file-tree-file"
 				class:selected={selectedFilePath === node.path}
 				onclick={() => selectFile(node.path)}
@@ -1594,38 +1730,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 	/* File Browser Styles */
 	.file-browser {
-		height: 100%;
 		display: flex;
 		flex-direction: column;
+		height: 100%;
 	}
 
 	.file-browser-content {
 		display: flex;
 		height: 100%;
-		gap: 12px;
 		min-height: 0;
+		gap: 12px;
 	}
 
 	.file-tree {
-		flex: 0 0 300px;
 		display: flex;
+		flex: 0 0 300px;
 		flex-direction: column;
+		overflow: hidden;
 		border: 1px solid var(--clr-border-2);
 		border-radius: 6px;
 		background: var(--clr-bg-1);
-		overflow: hidden;
 	}
 
 	.file-tree-header {
 		padding: 12px;
-		background: var(--clr-bg-2);
 		border-bottom: 1px solid var(--clr-border-2);
+		background: var(--clr-bg-2);
 	}
 
 	.file-tree-list {
 		flex: 1;
-		overflow-y: auto;
 		padding: 8px 0;
+		overflow-y: auto;
 	}
 
 	.file-tree-item {
@@ -1634,17 +1770,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 	.file-tree-folder,
 	.file-tree-file {
-		width: 100%;
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		width: 100%;
 		padding: 6px 12px;
-		background: none;
+		gap: 8px;
 		border: none;
-		cursor: pointer;
-		text-align: left;
-		transition: background-color 0.15s ease;
+		background: none;
 		color: var(--clr-text-1);
+		text-align: left;
+		cursor: pointer;
+		transition: background-color 0.15s ease;
 	}
 
 	.file-tree-folder:hover,
@@ -1659,8 +1795,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 	.file-tree-folder :global(.icon:last-child) {
 		margin-left: auto;
-		transition: transform 0.15s ease;
 		font-size: 12px;
+		transition: transform 0.15s ease;
 	}
 
 	.file-tree-folder.expanded :global(.icon:last-child) {
@@ -1673,14 +1809,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 	}
 
 	.file-preview {
-		flex: 1;
 		display: flex;
+		flex: 1;
 		flex-direction: column;
+		min-width: 0;
+		overflow: hidden;
 		border: 1px solid var(--clr-border-2);
 		border-radius: 6px;
 		background: var(--clr-bg-1);
-		overflow: hidden;
-		min-width: 0;
 	}
 
 	.file-preview-header {
@@ -1688,8 +1824,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 		align-items: center;
 		justify-content: space-between;
 		padding: 12px;
-		background: var(--clr-bg-2);
 		border-bottom: 1px solid var(--clr-border-2);
+		background: var(--clr-bg-2);
 	}
 
 	.file-preview-title {
@@ -1708,27 +1844,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 8px;
 		padding: 40px;
+		gap: 8px;
 		color: var(--clr-text-2);
 	}
 
 	.file-content {
-		padding: 16px;
 		margin: 0;
-		font-family: var(--font-mono);
+		padding: 16px;
+		background: var(--clr-bg-1);
+		color: var(--clr-text-1);
 		font-size: 12px;
 		line-height: 1.5;
-		color: var(--clr-text-1);
-		background: var(--clr-bg-1);
+		font-family: var(--font-mono);
 		white-space: pre-wrap;
 		word-break: break-word;
 		overflow-wrap: break-word;
 	}
 
 	.file-preview-placeholder {
-		flex: 1;
 		display: flex;
+		flex: 1;
 		align-items: center;
 		justify-content: center;
 		border: 1px solid var(--clr-border-2);
@@ -1737,12 +1873,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 	}
 
 	.placeholder-content {
-		text-align: center;
-		color: var(--clr-text-2);
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 8px;
+		color: var(--clr-text-2);
+		text-align: center;
 	}
 
 	.placeholder-content :global(.icon) {
