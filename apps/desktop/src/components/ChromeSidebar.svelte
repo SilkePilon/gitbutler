@@ -15,7 +15,9 @@
 		isHistoryPath,
 		newProjectSettingsPath,
 		newSettingsPath,
-		workspacePath
+		workspacePath,
+		repoOverviewPath,
+		isRepoOverviewPath
 	} from '$lib/routes/routes.svelte';
 	import { SETTINGS, type Settings } from '$lib/settings/userSettings';
 	import { TestId } from '$lib/testing/testIds';
@@ -176,6 +178,51 @@
 							/>
 						{/if}
 						<path d="M8 4V10H14" stroke="var(--clr-history-arrows)" stroke-width="1.5" />
+					</svg>
+				{/snippet}
+			</Button>
+		</div>
+		<div>
+			{#if isRepoOverviewPath()}
+				<div class="active-page-indicator" in:slide={{ axis: 'x', duration: 150 }}></div>
+			{/if}
+			<Button
+				kind="outline"
+				onclick={() => goto(repoOverviewPath(project.id))}
+				width={34}
+				class={['btn-square', isRepoOverviewPath() && 'btn-active']}
+				tooltip="Repository Overview"
+				{disabled}
+			>
+				{#snippet custom()}
+					<svg
+						width="16"
+						height="16"
+						viewBox="0 0 16 16"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M2 3V13C2 13.5523 2.44772 14 3 14H13C13.5523 14 14 13.5523 14 13V5"
+							stroke="var(--clr-repo-overview)"
+							stroke-width="1.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+						<path
+							d="M14 3L8 2L2 3V5L8 4L14 5V3Z"
+							fill="var(--clr-repo-overview)"
+							stroke="var(--clr-repo-overview)"
+							stroke-width="1.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+						<path
+							d="M5 7H11M5 9H11M5 11H9"
+							stroke="var(--clr-repo-overview)"
+							stroke-width="1.5"
+							stroke-linecap="round"
+						/>
 					</svg>
 				{/snippet}
 			</Button>
@@ -485,6 +532,9 @@
 		/* history icon */
 		--clr-history-bg: #fbdb79;
 		--clr-history-arrows: #0a0a0a;
+
+		/* repo overview icon */
+		--clr-repo-overview: #5eb3f5;
 
 		/* settings icon */
 		--clr-settings-bg: var(--label-clr);
