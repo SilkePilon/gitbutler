@@ -1,24 +1,24 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import FullviewLoading from '$components/FullviewLoading.svelte';
 	import Resizer from '$components/Resizer.svelte';
-	import BranchesListGroup from '$components/v3/branchesPage/BranchesListGroup.svelte';
 	import BranchesCardTemplate from '$components/v3/branchesPage/BranchesCardTemplate.svelte';
-	import Markdown from '@gitbutler/ui/markdown/Markdown.svelte';
-	import { FileService } from '$lib/files/fileService';
-	import { RemotesService, type GitRemote } from '$lib/remotes/remotesService';
-	import { Project } from '$lib/project/project';
-	import { Tauri } from '$lib/backend/tauri';
-	import { UiState } from '$lib/state/uiState.svelte';
+	import BranchesListGroup from '$components/v3/branchesPage/BranchesListGroup.svelte';
 	import { AIService } from '$lib/ai/service';
 	import { MessageRole } from '$lib/ai/types';
+	import { Tauri } from '$lib/backend/tauri';
+	import { FileService } from '$lib/files/fileService';
+	import { Project } from '$lib/project/project';
+	import { RemotesService, type GitRemote } from '$lib/remotes/remotesService';
+	import { UiState } from '$lib/state/uiState.svelte';
 	import { getContext } from '@gitbutler/shared/context';
 	import { inject } from '@gitbutler/shared/context';
 	import Button from '@gitbutler/ui/Button.svelte';
 	import Icon from '@gitbutler/ui/Icon.svelte';
+	import FileIcon from '@gitbutler/ui/file/FileIcon.svelte';
 	import FileListItemV3 from '@gitbutler/ui/file/FileListItemV3.svelte';
 	import FolderListItem from '@gitbutler/ui/file/FolderListItem.svelte';
-	import FileIcon from '@gitbutler/ui/file/FileIcon.svelte';
+	import Markdown from '@gitbutler/ui/markdown/Markdown.svelte';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		projectId: string;
