@@ -168,4 +168,24 @@ pub mod commands {
         let ctx = CommandContext::open(&project, settings.get()?.clone())?;
         Ok(gitbutler_repo::hooks::commit_msg(&ctx, message)?)
     }
+
+    #[tauri::command(async)]
+    #[instrument(skip(projects))]
+    pub fn write_workspace_file(
+        projects: State<'_, projects::Controller>,
+        project_id: ProjectId,
+        relative_path: &Path,
+        content: &str,
+    ) -> Result<(), Error> {
+        let project = projects.get(project_id)?;
+        let full_path = project.path.join(relative_path);
+        
+        // Create parent directories if they don't exist
+        if let Some(parent) = full_path.parent() {
+            std::fs::create_dir_all(parent).map_err(anyhow::Error::from)?;
+        }
+        
+        std::fs::write(full_path, content).map_err(anyhow::Error::from)?;
+        Ok(())
+    }
 }

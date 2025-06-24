@@ -95,3 +95,11 @@ export function newSettingsPath(page?: string) {
 export function clonePath() {
 	return '/onboarding/clone';
 }
+
+export function repoOverviewPath(projectId: string) {
+	return `/${projectId}/overview`;
+}
+
+export function isRepoOverviewPath() {
+	return isUrl<{ projectId: string }>('/[projectId]/overview');
+}

@@ -35,6 +35,14 @@ export class FileService {
 			await this.tauri.invoke<any[]>('list_commit_files', { projectId, commitOid })
 		).sort((a, b) => a.path?.localeCompare(b.path));
 	}
+
+	async writeToWorkspace(filePath: string, projectId: string, content: string) {
+		await this.tauri.invoke('write_workspace_file', {
+			relativePath: filePath,
+			projectId: projectId,
+			content: content
+		});
+	}
 }
 
 function isLarge(size: number | undefined) {
