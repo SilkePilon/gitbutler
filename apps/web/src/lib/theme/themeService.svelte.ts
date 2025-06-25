@@ -24,7 +24,7 @@ function getSystemTheme(): 'light' | 'dark' {
  */
 function updateDom() {
 	if (!browser) return;
-	
+
 	const docEl = document.documentElement;
 	if (
 		selectedTheme === 'dark' ||

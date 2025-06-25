@@ -130,11 +130,11 @@
 	</ContextMenuSection>
 
 	<ContextMenuSection>
-		<ContextMenuItem 
-			label="Documentation" 
+		<ContextMenuItem
+			label="Documentation"
 			onclick={() => {
 				window.open('https://docs.gitbutler.com/', '_blank');
-			}} 
+			}}
 		/>
 		<ContextMenuItem label="Log out" onclick={logout} />
 	</ContextMenuSection>
