@@ -165,9 +165,9 @@
 		align-items: center;
 		justify-content: center;
 		padding: 64px 0;
-		border: 1px solid #ddd;
+		border: 1px solid var(--clr-border-2);
 		border-radius: 12px;
-		background-color: #fff;
+		background-color: var(--clr-bg-1);
 		text-align: center;
 	}
 

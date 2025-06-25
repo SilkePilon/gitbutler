@@ -11,6 +11,7 @@
 	import HomeFooter from '$home/sections/Footer.svelte';
 	import Hero from '$home/sections/Hero.svelte';
 	import { AuthService } from '$lib/auth/authService.svelte';
+	import { initTheme } from '$lib/theme/themeService.svelte';
 	import { updateFavIcon } from '$lib/utils/faviconUtils';
 	import { WebRoutesService } from '@gitbutler/shared/routing/webRoutes.svelte';
 	import { setContext, type Snippet } from 'svelte';
@@ -30,6 +31,11 @@
 	setContext(AuthService, authService);
 
 	let token = $state<string | null>();
+
+	// Initialize theme system
+	$effect(() => {
+		initTheme();
+	});
 
 	$effect(() => {
 		token = get(authService.tokenReadable) || page.url.searchParams.get('gb_access_token');
