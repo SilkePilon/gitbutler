@@ -3,6 +3,7 @@
 	import { AuthService } from '$lib/auth/authService.svelte';
 	import Breadcrumbs from '$lib/components/chat/Breadcrumbs.svelte';
 	import { featureShowOrganizations } from '$lib/featureFlags';
+	import { setTheme, themeStore } from '$lib/theme/themeService.svelte';
 	import { UserService } from '$lib/user/userService';
 	import { getContext } from '@gitbutler/shared/context';
 	import { WebRoutesService } from '@gitbutler/shared/routing/webRoutes.svelte';
@@ -111,24 +112,30 @@
 		<ContextMenuItem
 			label="Dark"
 			onclick={async () => {
-				// TODO: implement theme switching
+				setTheme('dark');
 			}}
 		/>
 		<ContextMenuItem
 			label="Light"
 			onclick={async () => {
-				// TODO: implement theme switching
+				setTheme('light');
 			}}
 		/>
 		<ContextMenuItem
 			label="System"
 			onclick={async () => {
-				// TODO: implement theme switching
+				setTheme('system');
 			}}
 		/>
 	</ContextMenuSection>
 
 	<ContextMenuSection>
+		<ContextMenuItem 
+			label="Documentation" 
+			onclick={() => {
+				window.open('https://docs.gitbutler.com/', '_blank');
+			}} 
+		/>
 		<ContextMenuItem label="Log out" onclick={logout} />
 	</ContextMenuSection>
 </ContextMenu>
