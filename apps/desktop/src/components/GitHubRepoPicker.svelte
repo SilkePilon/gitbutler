@@ -38,6 +38,7 @@
 	let sortDirection = $state<'asc' | 'desc'>('desc');
 	let selectedExistingProject = $state<Project | undefined>(undefined);
 	let selectedRepository = $state<GitHubRepository | undefined>(undefined);
+	let selectedRepo = $state<GitHubRepository | undefined>(undefined);
 
 	function isRepoInGitButler(repo: GitHubRepository): Project | undefined {
 		const projectList = $projects;
@@ -128,6 +129,9 @@
 	export async function openModal() {
 		if (!isAuthenticated) return;
 
+		// Clear any previous selection
+		selectedRepo = undefined;
+
 		modal?.show();
 
 		if (!repoListService) {
@@ -165,9 +169,46 @@
 			modal?.close();
 			confirmOpenProjectModal?.show();
 		} else {
-			onRepoSelected(repo.clone_url);
+			selectedRepo = repo;
+		}
+	}
+
+	function useSelectedRepository() {
+		if (selectedRepo) {
+			onRepoSelected(selectedRepo.clone_url);
 			modal?.close();
 			onClose?.();
+		}
+	}
+
+	function clearSelection() {
+		selectedRepo = undefined;
+	}
+
+	function formatRelativeTime(dateString: string | null): string {
+		if (!dateString) return 'Unknown';
+
+		const date = new Date(dateString);
+		const now = new Date();
+		const diffInMs = now.getTime() - date.getTime();
+		const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+		const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+		const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+		const diffInMonths = Math.floor(diffInDays / 30);
+		const diffInYears = Math.floor(diffInDays / 365);
+
+		if (diffInMinutes < 1) {
+			return 'Just now';
+		} else if (diffInMinutes < 60) {
+			return `${diffInMinutes}m ago`;
+		} else if (diffInHours < 24) {
+			return `${diffInHours}h ago`;
+		} else if (diffInDays < 30) {
+			return diffInDays === 1 ? '1 day ago' : `${diffInDays} days ago`;
+		} else if (diffInMonths < 12) {
+			return diffInMonths === 1 ? '1 month ago' : `${diffInMonths} months ago`;
+		} else {
+			return diffInYears === 1 ? '1 year ago' : `${diffInYears} years ago`;
 		}
 	}
 </script>
@@ -175,7 +216,7 @@
 {#if isAuthenticated}
 	<Modal bind:this={modal} width="large" title="Select Repository">
 		<div class="repo-selector-split">
-			<div class="repo-selector">
+			<div class="repo-selector" class:hidden={selectedRepo}>
 				<div class="repo-selector__search">
 					<div class="search-container">
 						<Textbox placeholder="Search repositories..." bind:value={searchQuery} icon="search" />
@@ -212,12 +253,7 @@
 												<span class="repo-item__name">{repo.full_name}</span>
 												<div class="repo-item__badges">
 													{#if repo.private}
-														<Badge style="neutral" size="icon" icon="eye-hidden" />
-													{/if}
-													{#if repo.language}
-														<Badge style="neutral" size="icon">
-															{repo.language}
-														</Badge>
+														<Badge style="neutral" size="icon">Private</Badge>
 													{/if}
 													{#if isRepoInGitButler(repo)}
 														<Badge style="success" size="icon">Added</Badge>
@@ -230,9 +266,7 @@
 										{/if}
 										<div class="repo-item__meta">
 											<span class="repo-item__updated">
-												Updated {repo.updated_at
-													? new Date(repo.updated_at).toLocaleDateString()
-													: 'Unknown'}
+												Updated {formatRelativeTime(repo.updated_at)}
 											</span>
 										</div>
 									</button>
@@ -243,15 +277,33 @@
 				</div>
 			</div>
 
-			<div class="repo-selector__illustration">
-				<div class="repo-selector__illustration-wrapper">
-					<div class="repo-selector__illustration-svg">
-						{@html directionDoubtSvg}
+			<div class="repo-selector__illustration" class:expanded={selectedRepo}>
+				{#if selectedRepo}
+					<!-- Simple Repository Selection -->
+					<div class="repo-selection">
+						<div class="repo-selection__content">
+							<div class="repo-selection__svg">
+								{@html newProjectSvg}
+							</div>
+							<h3 class="text-18 text-bold repo-selection__title">{selectedRepo.full_name}</h3>
+						</div>
+
+						<div class="repo-selection__actions">
+							<Button onclick={clearSelection}>Back to List</Button>
+							<Button style="pop" onclick={useSelectedRepository}>Use Repository</Button>
+						</div>
 					</div>
-				</div>
-				<div class="repo-selector__illustration-text text-16 text-bold">
-					Select a repository to add to GitButler
-				</div>
+				{:else}
+					<!-- Default Illustration -->
+					<div class="repo-selector__illustration-wrapper">
+						<div class="repo-selector__illustration-svg">
+							{@html directionDoubtSvg}
+						</div>
+					</div>
+					<div class="repo-selector__illustration-text text-16 text-bold">
+						Select a repository to add to GitButler
+					</div>
+				{/if}
 			</div>
 		</div>
 	</Modal>
@@ -311,6 +363,10 @@
 		gap: 16px;
 	}
 
+	.repo-selector-split:has(.repo-selector.hidden) {
+		gap: 0;
+	}
+
 	.repo-selector {
 		display: flex;
 		flex: 1;
@@ -319,6 +375,19 @@
 		min-height: 300px;
 		max-height: 450px;
 		gap: 16px;
+		transform: translateX(0);
+		opacity: 1;
+		transition: all 0.3s ease-in-out;
+	}
+
+	.repo-selector.hidden {
+		flex: 0 0 0;
+		width: 0;
+		min-width: 0;
+		max-width: 0;
+		overflow: hidden;
+		transform: translateX(-20px);
+		opacity: 0;
 	}
 
 	.repo-selector__illustration {
@@ -328,6 +397,13 @@
 		margin-left: auto;
 		border-radius: var(--radius-m);
 		background-color: var(--clr-illustration-bg);
+		transition: all 0.3s ease-in-out;
+	}
+
+	.repo-selector__illustration.expanded {
+		flex: 1;
+		max-width: none;
+		/* Keep the original background color */
 	}
 
 	.repo-selector__illustration-wrapper {
@@ -357,9 +433,67 @@
 		text-align: center;
 	}
 
+	.repo-selection {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		height: 100%;
+		padding: 24px;
+		animation: slideInFromRight 0.4s ease-out forwards;
+	}
+
+	@keyframes slideInFromRight {
+		from {
+			transform: translateX(20px);
+			opacity: 0;
+		}
+		to {
+			transform: translateX(0);
+			opacity: 1;
+		}
+	}
+
+	.repo-selection__content {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 24px;
+		text-align: center;
+	}
+
+	.repo-selection__svg {
+		width: 100%;
+		max-width: 280px;
+		height: auto;
+	}
+
+	.repo-selection__svg :global(svg) {
+		width: 100%;
+		height: auto;
+	}
+
+	.repo-selection__title {
+		color: var(--clr-scale-pop-30);
+		line-height: 1.3;
+		word-break: break-word;
+	}
+
+	.repo-selection__actions {
+		display: flex;
+		justify-content: flex-end;
+		padding-top: 20px;
+		gap: 12px;
+	}
+
 	@media (min-width: 900px) {
 		.repo-selector__illustration {
 			display: flex;
+		}
+
+		.repo-selector__illustration.expanded {
+			flex: 1;
 		}
 
 		.repo-selector-split {
@@ -368,6 +502,13 @@
 
 		.repo-selector {
 			max-height: 500px;
+		}
+
+		.repo-selector.hidden {
+			flex: 0;
+			min-width: 0;
+			max-width: 0;
+			margin-right: 0;
 		}
 	}
 
@@ -506,9 +647,6 @@
 		align-items: center;
 		color: var(--clr-text-3);
 		font-size: 12px;
-	}
-
-	.repo-item__updated {
 	}
 
 	.open-project-modal-wrapper {
